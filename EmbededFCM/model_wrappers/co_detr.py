@@ -1,10 +1,12 @@
 import torch
 
-from mmcv.parallel import collate
+from mmcv.ops import RoIPool
+from mmcv.parallel import collate, scatter
 
 from model_wrappers.mmdet.apis import init_detector
 from model_wrappers.mmdet.datasets import replace_ImageToTensor
 from model_wrappers.mmdet.datasets.pipelines import Compose
+from model_wrappers.mmdet.core import bbox2result
 
 from .base_wrappers import BaseWrapper
 from .projects import *
@@ -16,25 +18,45 @@ class CO_DINO_5scale_9encdoer_lsj_r50_3x_coco(BaseWrapper):
         self.model = init_detector(config=model_config, checkpoint=model_checkpoint, device=device)
         
         self.cfg = self.model.cfg
-        
-        self.backbone = self.model.backbone
-        self.neck = self.model.neck
     
     def input_to_features(self, x, device):
         self.model = self.model.to(device).eval()
         
-        return self._input_to_backbone(x)
+        return self._input_to_backbone(x, device)
     
-    def features_to_output(self, x, device):
-        pass
+    def features_to_output(self, x, metas, device):
+        self.model = self.model.to(device).eval()
+        
+        
+        
+        results = self.model.query_head.forward(x, metas)
+        x = results[-1]
+        
+        proposal_list = self.model.rpn_head.simple_test_rpn(x, metas)
+        
+        return self.model.roi_head[self.model.eval_index].simple_test(x, proposal_list, metas, rescale=True)
     
-    def _input_to_backbone(self, x):
+    def _input_to_backbone(self, x, device):
         with torch.no_grad():
+            self.cfg.data.test.pipeline[0].type = 'LoadImageFromWebcam'
+            
             self.cfg.data.test.pipeline = replace_ImageToTensor(self.cfg.data.test.pipeline)
             test_pipeline = Compose(self.cfg.data.test.pipeline)
             
             data = dict(img=x)
             data = test_pipeline(data)
             
-            data = collate(data, samples_per_gpu=1)
-        
+            data['img_metas'] = [img_metas.data for img_metas in data['img_metas']]
+            data['img'] = [img.data for img in data['img']]
+            
+            if next(self.model.parameters()).is_cuda:
+                # scatter to specified GPU
+                data = scatter(data, [device])[0]
+            else:
+                for m in self.model.modules():
+                    assert not isinstance(
+                        m, RoIPool
+                    ), 'CPU inference with RoIPool is not supported currently.'
+            
+            data['img_metas'][0]['batch_input_shape'] = data['img'][0].size()[1:]
+            return self.model.extract_feat(data['img'][0].unsqueeze(0)), data['img_metas']
