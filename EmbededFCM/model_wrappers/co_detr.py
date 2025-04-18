@@ -26,15 +26,14 @@ class CO_DINO_5scale_9encdoer_lsj_r50_3x_coco(BaseWrapper):
     
     def features_to_output(self, x, metas, device):
         self.model = self.model.to(device).eval()
+             
+        results, x = self.model.query_head.simple_test(x, metas, rescale=True, return_encoder_output=True)
+        bbox_results = [
+            bbox2result(det_bboxes, det_labels, self.model.query_head.num_classes)
+            for det_bboxes, det_labels in results
+        ]
         
-        
-        
-        results = self.model.query_head.forward(x, metas)
-        x = results[-1]
-        
-        proposal_list = self.model.rpn_head.simple_test_rpn(x, metas)
-        
-        return self.model.roi_head[self.model.eval_index].simple_test(x, proposal_list, metas, rescale=True)
+        return bbox_results
     
     def _input_to_backbone(self, x, device):
         with torch.no_grad():
