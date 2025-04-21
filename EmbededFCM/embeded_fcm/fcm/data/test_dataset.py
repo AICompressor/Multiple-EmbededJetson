@@ -1,7 +1,7 @@
 import logging
 from pathlib import Path
 
-from model_wrappers.mmdet.datasets.coco import CocoDataset
+from embeded_fcm.model_wrappers.mmdet.datasets.coco import CocoDataset
 
 class SFUHW(CocoDataset):
     def __init__(

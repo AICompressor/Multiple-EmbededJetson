@@ -1,7 +1,7 @@
 # Copyright (c) OpenMMLab. All rights reserved.
 import torch
 
-from model_wrappers.mmdet.utils import util_mixins
+from ....utils import util_mixins
 
 
 class AssignResult(util_mixins.NiceRepr):
@@ -116,7 +116,7 @@ class AssignResult(util_mixins.NiceRepr):
             >>> self = AssignResult.random()
             >>> print(self.info)
         """
-        from model_wrappers.mmdet.core.bbox import demodata
+        from ....core.bbox import demodata
         rng = demodata.ensure_rng(kwargs.get('rng', None))
 
         num_gts = kwargs.get('num_gts', None)

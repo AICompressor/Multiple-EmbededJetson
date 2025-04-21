@@ -9,10 +9,10 @@ from mmcv.ops import RoIPool
 from mmcv.parallel import collate, scatter
 from mmcv.runner import load_checkpoint
 
-from model_wrappers.mmdet.core import get_classes, DatasetEnum
-from model_wrappers.mmdet.datasets import replace_ImageToTensor
-from model_wrappers.mmdet.datasets.pipelines import Compose
-from model_wrappers.mmdet.models import build_detector
+from ..core import get_classes, DatasetEnum
+from ..datasets import replace_ImageToTensor
+from ..datasets.pipelines import Compose
+from ..models import build_detector
 from model_wrappers.projects import *
 
 
@@ -76,7 +76,7 @@ class LoadImage:
         warnings.simplefilter('once')
         warnings.warn('`LoadImage` is deprecated and will be removed in '
                       'future releases. You may use `LoadImageFromWebcam` '
-                      'from `model_wrappers.mmdet.datasets.pipelines.` instead.')
+                      'from `..datasets.pipelines.` instead.')
         if isinstance(results['img'], str):
             results['filename'] = results['img']
             results['ori_filename'] = results['img']

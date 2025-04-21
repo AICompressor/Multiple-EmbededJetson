@@ -2,7 +2,7 @@
 from mmcv.utils import collect_env as collect_base_env
 from mmcv.utils import get_git_hash
 
-import model_wrappers.mmdet
+import .
 
 
 def collect_env():

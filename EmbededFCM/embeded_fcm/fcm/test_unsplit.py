@@ -13,9 +13,9 @@ import torch
 import torch.nn as nn
 
 import mmcv
-from embeded_fcm.model_wrappers import CO_DINO_5scale_9encdoer_lsj_r50_3x_coco
+from embeded_fcm.model_wrappers.co_detr import CO_DINO_5scale_9encdoer_lsj_r50_3x_coco
 
-from embeded_fcm.fcm.data import SFUHW
+from embeded_fcm.fcm.data.test_dataset import SFUHW
 
 def parse_args(argv):
     parser = argparse.ArgumentParser(description="Unsplit CO-DETR Inference")
