@@ -3,10 +3,10 @@ import torch
 from mmcv.ops import RoIPool
 from mmcv.parallel import collate, scatter
 
-from model_wrappers.mmdet.apis import init_detector
-from model_wrappers.mmdet.datasets import replace_ImageToTensor
-from model_wrappers.mmdet.datasets.pipelines import Compose
-from model_wrappers.mmdet.core import bbox2result
+from .mmdet.apis import init_detector
+from .mmdet.datasets import replace_ImageToTensor
+from .mmdet.datasets.pipelines import Compose
+from .mmdet.core import bbox2result
 
 from .base_wrappers import BaseWrapper
 from .projects import *
