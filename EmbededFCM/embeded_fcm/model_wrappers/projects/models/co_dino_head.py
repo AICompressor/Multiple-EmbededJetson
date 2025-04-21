@@ -3,13 +3,13 @@ import torch
 import torch.nn as nn
 import torch.nn.functional as F
 
-from model_wrappers.mmdet.core import (bbox_cxcywh_to_xyxy, bbox_xyxy_to_cxcywh, multi_apply,
+from ...mmdet.core import (bbox_cxcywh_to_xyxy, bbox_xyxy_to_cxcywh, multi_apply,
                         reduce_mean, bbox_overlaps)
-from model_wrappers.mmdet.models.utils.transformer import inverse_sigmoid
-from model_wrappers.mmdet.models.builder import HEADS
+from ...mmdet.models.utils.transformer import inverse_sigmoid
+from ...mmdet.models.builder import HEADS
 from mmcv.ops import batched_nms
-from model_wrappers.projects.models import CoDeformDETRHead
-from model_wrappers.projects.models.query_denoising import build_dn_generator
+from ...projects.models import CoDeformDETRHead
+from ...projects.models.query_denoising import build_dn_generator
 
 @HEADS.register_module()
 class CoDINOHead(CoDeformDETRHead):

@@ -3,7 +3,7 @@ from collections import OrderedDict
 
 from mmcv.utils import print_log
 
-from model_wrappers.mmdet.core import eval_map, eval_recalls
+from ..core import eval_map, eval_recalls
 from .builder import DATASETS
 from .xml_style import XMLDataset
 

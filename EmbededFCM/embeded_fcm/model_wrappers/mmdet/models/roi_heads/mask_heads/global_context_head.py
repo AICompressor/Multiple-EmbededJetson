@@ -3,8 +3,8 @@ import torch.nn as nn
 from mmcv.cnn import ConvModule
 from mmcv.runner import BaseModule, auto_fp16, force_fp32
 
-from model_wrappers.mmdet.models.builder import HEADS
-from model_wrappers.mmdet.models.utils import ResLayer, SimplifiedBasicBlock
+from ...builder import HEADS
+from ...utils import ResLayer, SimplifiedBasicBlock
 
 
 @HEADS.register_module()

@@ -1,7 +1,7 @@
 # Copyright (c) OpenMMLab. All rights reserved.
 import torch
 
-from model_wrappers.mmdet.core import bbox2roi
+from ...core import bbox2roi
 from ..builder import HEADS, build_head
 from .standard_roi_head import StandardRoIHead
 

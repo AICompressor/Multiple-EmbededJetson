@@ -4,7 +4,7 @@ import warnings
 
 from mmcv.runner import DefaultOptimizerConstructor, get_dist_info
 from mmcv.runner.optimizer.builder import OPTIMIZER_BUILDERS, OPTIMIZERS
-from model_wrappers.mmdet.utils import get_root_logger
+from ...utils import get_root_logger
 
 
 def get_layer_id_for_convnext(var_name, max_layer_id):

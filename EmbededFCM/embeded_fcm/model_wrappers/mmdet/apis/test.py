@@ -11,8 +11,8 @@ import torch.distributed as dist
 from mmcv.image import tensor2imgs
 from mmcv.runner import get_dist_info
 
-from model_wrappers.mmdet.core import encode_mask_results
-from model_wrappers.projects import *
+from ...mmdet.core import encode_mask_results
+from ...projects import *
 
 def single_gpu_test(model,
                     data_loader,

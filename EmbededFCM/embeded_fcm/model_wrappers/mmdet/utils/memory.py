@@ -6,7 +6,7 @@ from functools import wraps
 
 import torch
 
-from model_wrappers.mmdet.utils import get_root_logger
+from . import get_root_logger
 
 
 def cast_tensor_type(inputs, src_type=None, dst_type=None):

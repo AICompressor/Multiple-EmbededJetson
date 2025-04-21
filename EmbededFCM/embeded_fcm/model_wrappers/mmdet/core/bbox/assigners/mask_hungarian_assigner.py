@@ -1,8 +1,8 @@
 # Copyright (c) OpenMMLab. All rights reserved.
 import torch
 
-from model_wrappers.mmdet.core.bbox.builder import BBOX_ASSIGNERS
-from model_wrappers.mmdet.core.bbox.match_costs.builder import build_match_cost
+from ..builder import BBOX_ASSIGNERS
+from ..match_costs.builder import build_match_cost
 from .assign_result import AssignResult
 from .base_assigner import BaseAssigner
 

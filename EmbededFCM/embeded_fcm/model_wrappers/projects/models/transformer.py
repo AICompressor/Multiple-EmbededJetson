@@ -9,8 +9,8 @@ from mmcv.cnn import xavier_init
 from mmcv.cnn.bricks.registry import TRANSFORMER_LAYER_SEQUENCE
 from mmcv.cnn.bricks.transformer import TransformerLayerSequence
 
-from model_wrappers.mmdet.models.utils.transformer import Transformer, DeformableDetrTransformer, DeformableDetrTransformerDecoder
-from model_wrappers.mmdet.models.utils.builder import TRANSFORMER
+from ...mmdet.models.utils.transformer import Transformer, DeformableDetrTransformer, DeformableDetrTransformerDecoder
+from ...mmdet.models.utils.builder import TRANSFORMER
 
 
 def inverse_sigmoid(x, eps=1e-5):

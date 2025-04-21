@@ -7,8 +7,8 @@ from mmcv.cnn import build_conv_layer, build_norm_layer
 from mmcv.runner import BaseModule
 from torch.nn.modules.utils import _pair
 
-from model_wrappers.mmdet.models.backbones.resnet import Bottleneck, ResNet
-from model_wrappers.mmdet.models.builder import BACKBONES
+from .resnet import Bottleneck, ResNet
+from ..builder import BACKBONES
 
 
 class TridentConv(BaseModule):

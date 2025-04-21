@@ -9,9 +9,9 @@ import mmcv
 import numpy as np
 from numpy import random
 
-from model_wrappers.mmdet.core import BitmapMasks, PolygonMasks, find_inside_bboxes
-from model_wrappers.mmdet.core.evaluation.bbox_overlaps import bbox_overlaps
-from model_wrappers.mmdet.utils import log_img_scale
+from ...core import BitmapMasks, PolygonMasks, find_inside_bboxes
+from ...core.evaluation.bbox_overlaps import bbox_overlaps
+from ...utils import log_img_scale
 from ..builder import PIPELINES
 
 try:

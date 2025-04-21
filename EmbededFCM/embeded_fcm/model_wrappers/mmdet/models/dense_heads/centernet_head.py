@@ -5,9 +5,9 @@ from mmcv.cnn import bias_init_with_prob, normal_init
 from mmcv.ops import batched_nms
 from mmcv.runner import force_fp32
 
-from model_wrappers.mmdet.core import multi_apply
-from model_wrappers.mmdet.models import HEADS, build_loss
-from model_wrappers.mmdet.models.utils import gaussian_radius, gen_gaussian_target
+from ...core import multi_apply
+from .. import HEADS, build_loss
+from ..utils import gaussian_radius, gen_gaussian_target
 from ..utils.gaussian_target import (get_local_maximum, get_topk_from_heatmap,
                                      transpose_and_gather_feat)
 from .base_dense_head import BaseDenseHead

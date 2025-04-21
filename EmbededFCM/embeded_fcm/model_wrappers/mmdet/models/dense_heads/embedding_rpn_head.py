@@ -3,7 +3,7 @@ import torch
 import torch.nn as nn
 from mmcv.runner import BaseModule
 
-from model_wrappers.mmdet.models.builder import HEADS
+from ..builder import HEADS
 from ...core import bbox_cxcywh_to_xyxy
 
 

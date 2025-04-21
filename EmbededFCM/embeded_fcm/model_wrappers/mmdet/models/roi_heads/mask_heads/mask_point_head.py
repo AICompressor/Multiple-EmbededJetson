@@ -7,8 +7,8 @@ from mmcv.cnn import ConvModule
 from mmcv.ops import point_sample, rel_roi_point_to_rel_img_point
 from mmcv.runner import BaseModule
 
-from model_wrappers.mmdet.models.builder import HEADS, build_loss
-from model_wrappers.mmdet.models.utils import (get_uncertain_point_coords_with_randomness,
+from ...builder import HEADS, build_loss
+from ...utils import (get_uncertain_point_coords_with_randomness,
                                 get_uncertainty)
 
 

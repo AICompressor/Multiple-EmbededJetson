@@ -12,9 +12,9 @@ import torch.utils.checkpoint as checkpoint
 import numpy as np
 from timm.models.layers import DropPath, to_2tuple, trunc_normal_
 
-from model_wrappers.mmcv_custom import load_checkpoint
-from model_wrappers.mmdet.utils import get_root_logger
-from model_wrappers.mmdet.models.builder import BACKBONES
+from ...mmcv_custom import load_checkpoint
+from ...mmdet.utils import get_root_logger
+from ...mmdet.models.builder import BACKBONES
 
 from mmcv.runner import BaseModule
 

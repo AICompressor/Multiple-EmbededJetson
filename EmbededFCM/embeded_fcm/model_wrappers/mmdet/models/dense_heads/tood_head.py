@@ -6,10 +6,10 @@ from mmcv.cnn import ConvModule, Scale, bias_init_with_prob, normal_init
 from mmcv.ops import deform_conv2d
 from mmcv.runner import force_fp32
 
-from model_wrappers.mmdet.core import (anchor_inside_flags, build_assigner, distance2bbox,
+from ...core import (anchor_inside_flags, build_assigner, distance2bbox,
                         images_to_levels, multi_apply, reduce_mean, unmap)
-from model_wrappers.mmdet.core.utils import filter_scores_and_topk
-from model_wrappers.mmdet.models.utils import sigmoid_geometric_mean
+from ...core.utils import filter_scores_and_topk
+from ..utils import sigmoid_geometric_mean
 from ..builder import HEADS, build_loss
 from .atss_head import ATSSHead
 

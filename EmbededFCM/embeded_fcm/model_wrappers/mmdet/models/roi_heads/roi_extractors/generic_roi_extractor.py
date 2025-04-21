@@ -2,7 +2,7 @@
 from mmcv.cnn.bricks import build_plugin_layer
 from mmcv.runner import force_fp32
 
-from model_wrappers.mmdet.models.builder import ROI_EXTRACTORS
+from ...builder import ROI_EXTRACTORS
 from .base_roi_extractor import BaseRoIExtractor
 
 

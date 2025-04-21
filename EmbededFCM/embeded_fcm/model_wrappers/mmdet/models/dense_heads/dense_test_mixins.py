@@ -5,10 +5,10 @@ from inspect import signature
 import torch
 from mmcv.ops import batched_nms
 
-from model_wrappers.mmdet.core import bbox_mapping_back, merge_aug_proposals
+from ...core import bbox_mapping_back, merge_aug_proposals
 
 if sys.version_info >= (3, 7):
-    from model_wrappers.mmdet.utils.contextmanagers import completed
+    from ...utils.contextmanagers import completed
 
 
 class BBoxTestMixin(object):

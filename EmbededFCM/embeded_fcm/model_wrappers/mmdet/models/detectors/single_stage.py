@@ -3,7 +3,7 @@ import warnings
 
 import torch
 
-from model_wrappers.mmdet.core import bbox2result
+from ...core import bbox2result
 from ..builder import DETECTORS, build_backbone, build_head, build_neck
 from .base import BaseDetector
 

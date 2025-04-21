@@ -7,13 +7,13 @@ import torch.nn.functional as F
 from mmcv.cnn import bias_init_with_prob, normal_init
 from mmcv.runner import force_fp32
 
-from model_wrappers.mmdet.core import multi_apply
-from model_wrappers.mmdet.core.anchor.point_generator import MlvlPointGenerator
-from model_wrappers.mmdet.core.bbox import bbox_overlaps
-from model_wrappers.mmdet.models import HEADS
-from model_wrappers.mmdet.models.dense_heads.atss_head import reduce_mean
-from model_wrappers.mmdet.models.dense_heads.fcos_head import FCOSHead
-from model_wrappers.mmdet.models.dense_heads.paa_head import levels_to_images
+from ...core import multi_apply
+from ...core.anchor.point_generator import MlvlPointGenerator
+from ...core.bbox import bbox_overlaps
+from .. import HEADS
+from .atss_head import reduce_mean
+from .fcos_head import FCOSHead
+from .paa_head import levels_to_images
 
 EPS = 1e-12
 

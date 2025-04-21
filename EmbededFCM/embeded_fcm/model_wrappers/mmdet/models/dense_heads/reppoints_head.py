@@ -5,10 +5,10 @@ import torch.nn as nn
 from mmcv.cnn import ConvModule
 from mmcv.ops import DeformConv2d
 
-from model_wrappers.mmdet.core import (build_assigner, build_sampler, images_to_levels,
+from ...core import (build_assigner, build_sampler, images_to_levels,
                         multi_apply, unmap)
-from model_wrappers.mmdet.core.anchor.point_generator import MlvlPointGenerator
-from model_wrappers.mmdet.core.utils import filter_scores_and_topk
+from ...core.anchor.point_generator import MlvlPointGenerator
+from ...core.utils import filter_scores_and_topk
 from ..builder import HEADS, build_loss
 from .anchor_free_head import AnchorFreeHead
 

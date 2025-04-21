@@ -2,10 +2,10 @@
 import mmcv
 
 from .version import __version__, short_version
-from . import (
+from ..mmdet import (
     apis,
     core,
-    dataset,
+    datasets,
     models,
     utils
 )
@@ -38,7 +38,7 @@ __all__ = [
     'short_version',
     "apis",
     "core",
-    "dataset",
+    "datasets",
     "models",
     "utils"
 ]

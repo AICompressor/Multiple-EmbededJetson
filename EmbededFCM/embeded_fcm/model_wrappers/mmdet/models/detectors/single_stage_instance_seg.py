@@ -6,7 +6,7 @@ import mmcv
 import numpy as np
 import torch
 
-from model_wrappers.mmdet.core.visualization.image import imshow_det_bboxes
+from ...core.visualization.image import imshow_det_bboxes
 from ..builder import DETECTORS, build_backbone, build_head, build_neck
 from .base import BaseDetector
 

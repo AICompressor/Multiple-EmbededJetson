@@ -2,8 +2,8 @@
 import torch
 import torch.nn.functional as F
 
-from model_wrappers.mmdet.core.bbox.iou_calculators import bbox_overlaps
-from model_wrappers.mmdet.core.bbox.transforms import bbox_cxcywh_to_xyxy, bbox_xyxy_to_cxcywh
+from ..iou_calculators import bbox_overlaps
+from ..transforms import bbox_cxcywh_to_xyxy, bbox_xyxy_to_cxcywh
 from .builder import MATCH_COST
 
 

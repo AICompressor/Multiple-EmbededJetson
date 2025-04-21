@@ -1,7 +1,7 @@
 # Copyright (c) OpenMMLab. All rights reserved.
 import torch
 
-from ....utils import util_mixins
+from embeded_fcm.model_wrappers.mmdet.utils import util_mixins
 
 
 class AssignResult(util_mixins.NiceRepr):

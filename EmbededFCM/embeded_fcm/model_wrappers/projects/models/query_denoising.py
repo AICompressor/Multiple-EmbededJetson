@@ -1,7 +1,7 @@
 # Copyright (c) OpenMMLab. All rights reserved.
 import torch
 
-from model_wrappers.mmdet.core import bbox_xyxy_to_cxcywh
+from ...mmdet.core import bbox_xyxy_to_cxcywh
 from .transformer import inverse_sigmoid
 
 

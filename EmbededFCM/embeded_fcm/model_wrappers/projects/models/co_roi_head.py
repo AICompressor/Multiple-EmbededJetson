@@ -1,8 +1,8 @@
 import torch
-from model_wrappers.mmdet.core import bbox2result, bbox2roi, build_assigner, build_sampler
-from model_wrappers.mmdet.models.builder import HEADS, build_head, build_roi_extractor
-from model_wrappers.mmdet.models.roi_heads.base_roi_head import BaseRoIHead
-from model_wrappers.mmdet.models.roi_heads.test_mixins import BBoxTestMixin, MaskTestMixin
+from ...mmdet.core import bbox2result, bbox2roi, build_assigner, build_sampler
+from ...mmdet.models.builder import HEADS, build_head, build_roi_extractor
+from ...mmdet.models.roi_heads.base_roi_head import BaseRoIHead
+from ...mmdet.models.roi_heads.test_mixins import BBoxTestMixin, MaskTestMixin
 
 
 @HEADS.register_module()

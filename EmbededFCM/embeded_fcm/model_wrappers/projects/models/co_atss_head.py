@@ -3,10 +3,10 @@ import torch.nn as nn
 from mmcv.cnn import ConvModule, Scale
 from mmcv.runner import force_fp32
 
-from model_wrappers.mmdet.core import (anchor_inside_flags, build_assigner, build_sampler,
+from ...mmdet.core import (anchor_inside_flags, build_assigner, build_sampler,
                         images_to_levels, multi_apply, reduce_mean, unmap)
-from model_wrappers.mmdet.models.builder import HEADS, build_loss
-from model_wrappers.mmdet.models.dense_heads.anchor_head import AnchorHead
+from ...mmdet.models.builder import HEADS, build_loss
+from ...mmdet.models.dense_heads.anchor_head import AnchorHead
 
 
 @HEADS.register_module()

@@ -7,8 +7,8 @@ import numpy as np
 from mmcv.cnn import ConvModule, build_upsample_layer
 from mmcv.ops.roi_align import roi_align
 
-from model_wrappers.mmdet.core.mask.structures import polygon_to_bitmap, BitmapMasks
-from model_wrappers.mmdet.models.builder import HEADS, build_loss, build_roi_extractor
+from ....core.mask.structures import polygon_to_bitmap, BitmapMasks
+from ...builder import HEADS, build_loss, build_roi_extractor
 from .fcn_mask_head import _do_paste_mask
 from .fcn_mask_head import BYTES_PER_FLOAT, GPU_MEM_LIMIT
 from mmcv.ops import SimpleRoIAlign

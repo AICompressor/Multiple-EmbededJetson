@@ -2,7 +2,7 @@
 import numpy as np
 import torch
 
-from model_wrappers.mmdet.core import bbox2result, bbox2roi
+from ...core import bbox2result, bbox2roi
 from ..builder import HEADS, build_head, build_roi_extractor
 from .standard_roi_head import StandardRoIHead
 

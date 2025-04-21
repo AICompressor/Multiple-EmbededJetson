@@ -8,7 +8,7 @@ import torch
 import torch.distributed as dist
 from mmcv.runner import BaseModule, auto_fp16
 
-from model_wrappers.mmdet.core.visualization import imshow_det_bboxes
+from ...core.visualization import imshow_det_bboxes
 
 
 class BaseDetector(BaseModule, metaclass=ABCMeta):

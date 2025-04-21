@@ -2,7 +2,7 @@
 import mmcv
 import torch
 
-from model_wrappers.mmdet.core import bbox_overlaps
+from ...core import bbox_overlaps
 
 
 @mmcv.jit(derivate=True, coderize=True)

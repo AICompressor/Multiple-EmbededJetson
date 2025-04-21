@@ -4,19 +4,19 @@ import torch.nn as nn
 import torch.nn.functional as F
 from mmcv.cnn import Linear, bias_init_with_prob, constant_init
 from mmcv.runner import force_fp32
-from model_wrappers.mmdet.core import (bbox_cxcywh_to_xyxy, bbox_xyxy_to_cxcywh,
+from ...mmdet.core import (bbox_cxcywh_to_xyxy, bbox_xyxy_to_cxcywh,
                         build_assigner, build_sampler, multi_apply,
                         reduce_mean, bbox_overlaps)
-from model_wrappers.mmdet.models.utils.transformer import inverse_sigmoid
-from model_wrappers.mmdet.models.builder import HEADS
-from model_wrappers.mmdet.models.dense_heads.detr_head import DETRHead
+from ...mmdet.models.utils.transformer import inverse_sigmoid
+from ...mmdet.models.builder import HEADS
+from ...mmdet.models.dense_heads.detr_head import DETRHead
 
 import sys
 import numpy as np
 from mmcv.ops import batched_nms
-from model_wrappers.mmdet.core import bbox_mapping_back, merge_aug_proposals
+from ...mmdet.core import bbox_mapping_back, merge_aug_proposals
 if sys.version_info >= (3, 7):
-    from model_wrappers.mmdet.utils.contextmanagers import completed
+    from ...mmdet.utils.contextmanagers import completed
 
 
 @HEADS.register_module()

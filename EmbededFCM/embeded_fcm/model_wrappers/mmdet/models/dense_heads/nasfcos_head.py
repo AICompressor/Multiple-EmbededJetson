@@ -4,7 +4,7 @@ import copy
 import torch.nn as nn
 from mmcv.cnn import ConvModule, Scale
 
-from model_wrappers.mmdet.models.dense_heads.fcos_head import FCOSHead
+from .fcos_head import FCOSHead
 from ..builder import HEADS
 
 

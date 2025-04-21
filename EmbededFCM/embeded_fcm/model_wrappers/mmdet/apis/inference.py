@@ -13,7 +13,7 @@ from ..core import get_classes, DatasetEnum
 from ..datasets import replace_ImageToTensor
 from ..datasets.pipelines import Compose
 from ..models import build_detector
-from model_wrappers.projects import *
+from ...projects import *
 
 
 def init_detector(config, checkpoint=None, dataset=DatasetEnum.COCO, device='cuda:0', cfg_options=None):

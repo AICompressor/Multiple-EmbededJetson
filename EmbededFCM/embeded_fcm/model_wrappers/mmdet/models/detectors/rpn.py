@@ -5,7 +5,7 @@ import mmcv
 import torch
 from mmcv.image import tensor2imgs
 
-from model_wrappers.mmdet.core import bbox_mapping
+from ...core import bbox_mapping
 from ..builder import DETECTORS, build_backbone, build_head, build_neck
 from .base import BaseDetector
 

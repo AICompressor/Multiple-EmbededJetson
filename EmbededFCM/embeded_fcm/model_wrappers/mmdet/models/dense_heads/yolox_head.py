@@ -10,7 +10,7 @@ from mmcv.cnn import (ConvModule, DepthwiseSeparableConvModule,
 from mmcv.ops.nms import batched_nms
 from mmcv.runner import force_fp32
 
-from model_wrappers.mmdet.core import (MlvlPointGenerator, bbox_xyxy_to_cxcywh,
+from ...core import (MlvlPointGenerator, bbox_xyxy_to_cxcywh,
                         build_assigner, build_sampler, multi_apply,
                         reduce_mean)
 from ..builder import HEADS, build_loss

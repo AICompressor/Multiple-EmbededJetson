@@ -2,7 +2,7 @@
 from mmcv.cnn import ConvModule, Linear
 from mmcv.runner import ModuleList, auto_fp16
 
-from model_wrappers.mmdet.models.builder import HEADS
+from ...builder import HEADS
 from .fcn_mask_head import FCNMaskHead
 
 

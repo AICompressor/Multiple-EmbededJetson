@@ -13,7 +13,7 @@ import numpy as np
 from mmcv.utils import print_log
 from terminaltables import AsciiTable
 
-from model_wrappers.mmdet.core import eval_recalls
+from ..core import eval_recalls
 from .api_wrappers import COCO, COCOeval
 from .builder import DATASETS
 from .custom import CustomDataset

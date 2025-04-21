@@ -2,7 +2,7 @@
 import torch.nn as nn
 from mmcv.runner import BaseModule, auto_fp16
 
-from model_wrappers.mmdet.models.builder import HEADS
+from ...builder import HEADS
 
 
 @HEADS.register_module()

@@ -13,8 +13,8 @@ from mmcv.runner.hooks.checkpoint import CheckpointHook
 from mmcv.runner.hooks.logger.wandb import WandbLoggerHook
 from mmcv.utils import digit_version
 
-from model_wrappers.mmdet.core import DistEvalHook, EvalHook
-from model_wrappers.mmdet.core.mask.structures import polygon_to_bitmap
+from ...core import DistEvalHook, EvalHook
+from ..mask.structures import polygon_to_bitmap
 
 
 @HOOKS.register_module()

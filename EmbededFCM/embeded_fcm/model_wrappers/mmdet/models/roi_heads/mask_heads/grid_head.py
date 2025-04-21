@@ -6,7 +6,7 @@ import torch.nn.functional as F
 from mmcv.cnn import ConvModule
 from mmcv.runner import BaseModule
 
-from model_wrappers.mmdet.models.builder import HEADS, build_loss
+from ...builder import HEADS, build_loss
 
 
 @HEADS.register_module()

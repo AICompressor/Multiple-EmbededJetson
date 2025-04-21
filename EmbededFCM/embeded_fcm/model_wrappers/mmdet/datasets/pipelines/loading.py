@@ -5,7 +5,7 @@ import mmcv
 import numpy as np
 import pycocotools.mask as maskUtils
 
-from model_wrappers.mmdet.core import BitmapMasks, PolygonMasks
+from ...core import BitmapMasks, PolygonMasks
 from ..builder import PIPELINES
 
 try:

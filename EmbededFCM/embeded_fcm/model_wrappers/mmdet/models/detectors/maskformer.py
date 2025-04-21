@@ -4,8 +4,8 @@ import copy
 import mmcv
 import numpy as np
 
-from model_wrappers.mmdet.core import INSTANCE_OFFSET, bbox2result
-from model_wrappers.mmdet.core.visualization import imshow_det_bboxes
+from ...core import INSTANCE_OFFSET, bbox2result
+from ...core.visualization import imshow_det_bboxes
 from ..builder import DETECTORS, build_backbone, build_head, build_neck
 from .single_stage import SingleStageDetector
 

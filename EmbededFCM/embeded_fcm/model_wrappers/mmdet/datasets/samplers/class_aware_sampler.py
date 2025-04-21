@@ -5,7 +5,7 @@ import torch
 from mmcv.runner import get_dist_info
 from torch.utils.data import Sampler
 
-from model_wrappers.mmdet.core.utils import sync_random_seed
+from ...core.utils import sync_random_seed
 
 
 class ClassAwareSampler(Sampler):

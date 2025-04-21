@@ -7,8 +7,8 @@ import torch.nn as nn
 from mmcv.cnn import ConvModule
 from mmcv.runner import force_fp32
 
-from model_wrappers.mmdet.core import build_bbox_coder, multi_apply
-from model_wrappers.mmdet.core.anchor.point_generator import MlvlPointGenerator
+from ...core import build_bbox_coder, multi_apply
+from ...core.anchor.point_generator import MlvlPointGenerator
 from ..builder import HEADS, build_loss
 from .base_dense_head import BaseDenseHead
 from .dense_test_mixins import BBoxTestMixin

@@ -5,10 +5,10 @@ import torch.nn.functional as F
 from mmcv.runner import BaseModule, auto_fp16, force_fp32
 from torch.nn.modules.utils import _pair
 
-from model_wrappers.mmdet.core import build_bbox_coder, multi_apply, multiclass_nms
-from model_wrappers.mmdet.models.builder import HEADS, build_loss
-from model_wrappers.mmdet.models.losses import accuracy
-from model_wrappers.mmdet.models.utils import build_linear_layer
+from ....core import build_bbox_coder, multi_apply, multiclass_nms
+from ...builder import HEADS, build_loss
+from ...losses import accuracy
+from ...utils import build_linear_layer
 
 
 @HEADS.register_module()

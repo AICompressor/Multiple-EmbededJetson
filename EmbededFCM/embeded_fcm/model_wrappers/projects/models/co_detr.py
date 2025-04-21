@@ -4,10 +4,10 @@ import torch
 import torch.nn as nn
 import torch.nn.functional as F
 
-from model_wrappers.mmdet.core import bbox2result, bbox2roi, build_assigner, build_sampler
-from model_wrappers.mmdet.models.builder import DETECTORS, build_backbone, build_head, build_neck, build_roi_extractor
-from model_wrappers.mmdet.models.detectors.base import BaseDetector
-from model_wrappers.mmdet.models.losses.cross_entropy_loss import generate_block_target
+from ...mmdet.core import bbox2result, bbox2roi, build_assigner, build_sampler
+from ...mmdet.models.builder import DETECTORS, build_backbone, build_head, build_neck, build_roi_extractor
+from ...mmdet.models.detectors.base import BaseDetector
+from ...mmdet.models.losses.cross_entropy_loss import generate_block_target
 
 
 @DETECTORS.register_module()
