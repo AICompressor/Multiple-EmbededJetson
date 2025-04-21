@@ -15,7 +15,7 @@ import torch.nn as nn
 import mmcv
 from embeded_fcm.model_wrappers.co_detr import CO_DINO_5scale_9encdoer_lsj_r50_3x_coco
 
-from embeded_fcm.fcm.data.test_dataset import SFUHW
+from embeded_fcm.data.test_dataset import SFUHW
 
 def parse_args(argv):
     parser = argparse.ArgumentParser(description="Unsplit CO-DETR Inference")
@@ -60,7 +60,10 @@ def test(model, args):
     dataset_list = os.listdir(args.dataset)
     
     for data in dataset_list:
-        print(data)
+        dataset = SFUHW(
+            root=os.path.join(args.dataset, data),
+            annotation_file=f"annotations/{data}.json"
+        )
 
 def main(argv):
     args = parse_args(argv)
@@ -77,7 +80,14 @@ def main(argv):
         model_checkpoint=model_checkpoint
     )
     
-    test(model, args)
+    # set logger
+    
+    # print specs
+    
+    test(
+        model,
+        args
+    )
 
 if __name__ == "__main__":
     main(sys.argv[1:])
