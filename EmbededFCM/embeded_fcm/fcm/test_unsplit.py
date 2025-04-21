@@ -8,9 +8,12 @@ import psutil
 import pynvml
 from ptflops import get_model_complexity_info
 import os
+import json
+import tqdm
 
 import torch
 import torch.nn as nn
+from torch.utils.data import DataLoader
 
 import mmcv
 from embeded_fcm.model_wrappers.co_detr import CO_DINO_5scale_9encdoer_lsj_r50_3x_coco
@@ -64,6 +67,38 @@ def test(model, args):
             root=os.path.join(args.dataset, data),
             annotation_file=f"annotations/{data}.json"
         )
+        data_infos = dataset.load_annotations(dataset.annotation_path)
+        dataset.data_infos = data_infos
+        dataset._dataset = data_infos
+        
+        dataloader = DataLoader(
+            dataset,
+            batch_size=1,
+            num_workers=4,
+            shuffle=False,
+            pin_memory=(device == "cuda"),
+            collate_fn=lambda x:x
+        )
+        
+        results = []
+        for idx, batch in enumerate(dataloader):
+            imgs = batch[0]['img']
+            with torch.no_grad():
+                result = model.unsplit(imgs, device)
+            
+            results.append(result)
+            # for det in result:
+            #     det_np = [d for d in det]
+            #     results.append(det_np)
+                
+        eval_results = dataset.evaluate(
+            results,
+            metric='bbox'
+        )
+        
+        # save results on json file
+        
+        # print results and complexity on terminal
 
 def main(argv):
     args = parse_args(argv)

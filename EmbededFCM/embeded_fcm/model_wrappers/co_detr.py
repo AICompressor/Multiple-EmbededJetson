@@ -19,6 +19,10 @@ class CO_DINO_5scale_9encdoer_lsj_r50_3x_coco(BaseWrapper):
         
         self.cfg = self.model.cfg
     
+    def unsplit(self, x, device):
+        features, metas = self.input_to_features(x, device)
+        return self.features_to_output(features, metas, device)[0]
+    
     def input_to_features(self, x, device):
         self.model = self.model.to(device).eval()
         
