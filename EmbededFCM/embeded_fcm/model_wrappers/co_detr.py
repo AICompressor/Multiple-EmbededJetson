@@ -89,7 +89,10 @@ class CO_DINO_5scale_9encdoer_lsj_r50_3x_coco(BaseWrapper):
             
             data['img_metas'][0]['batch_input_shape'] = data['img'][0].size()[1:]
             
-            macs, params = self.profile_backbone(data['img'][0].unsqueeze(0))
+            macs, pixels = self.profile_backbone(data['img'][0].unsqueeze(0))
+            kmacs_per_pixels = macs / 1_000 / pixels
+            
+            
     
     def profile_backbone(self, x):
         with torch.no_grad():
@@ -108,7 +111,7 @@ class CO_DINO_5scale_9encdoer_lsj_r50_3x_coco(BaseWrapper):
             macs_sum += macs
             
             backbone_results = self.model.backbone(x)
-            input_res = [tuple(f.shape) for f in backbone_results]
+            input_res = tuple(tuple(f.shape) for f in backbone_results)
             
             macs, _ = get_model_complexity_info(
                 self.model.neck,
@@ -124,8 +127,6 @@ class CO_DINO_5scale_9encdoer_lsj_r50_3x_coco(BaseWrapper):
     
     def neck_input_constructors(self, input_res):
         device = next(self.model.neck.parameters()).device
-        dummy_inputs = tuple(torch.zeros(s, device=device) for s in input_res)
         
-        print(input_res)
-        
-        return (dummy_inputs,)
+        feats = [torch.zeros(s, device=device) for s in input_res]
+        return {"inputs": feats}
