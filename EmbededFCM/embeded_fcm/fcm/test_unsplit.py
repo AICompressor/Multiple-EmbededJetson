@@ -98,11 +98,11 @@ def test(model, args, logger):
             collate_fn=lambda x:x
         )
         
-        kmac_per_pixel = 0.0
+        kmac_per_pixels_total = 0.0
         
         results = []
         model_only_time = 0.0
-        for idx, batch in tqdm(enumerate(dataloader)):
+        for idx, batch in tqdm(enumerate(dataloader), desc=f"DATA: {data}"):
             data_start_time = time.time()
             imgs = batch[0]['img']
             with torch.no_grad():
@@ -111,10 +111,10 @@ def test(model, args, logger):
             
             model_only_time += data_end_time
             
-            model.profile_model(imgs, device)
-            
+            kmac_per_pixels = model.profile_model(imgs, device)
+            kmac_per_pixels_total += kmac_per_pixels["kmacs_per_pixels_nn_part_1"]
             results.append(result)
-                
+            
         eval_results = dataset.evaluate(
             results,
             metric='bbox'
@@ -133,13 +133,13 @@ def test(model, args, logger):
             "time_sec": ds_time,
             "model_only_time": model_only_time,
             "gpu_used_mb": gpu_used_mb,
-            "kmac_per_pixel": kmac_per_pixel,
+            "kmac_per_pixels": kmac_per_pixels_total,
             "eval_bbox": eval_results
         }
         all_stats["datasets"].append(stats)
         
         # print results and complexity on terminal
-        logger.info(f"Completed: {data} | time: {ds_time:.2f}s | GPU: {gpu_used_mb:.2f}MB | RAM: {ram_used_mb:.2f}MB | kMAC/pixel: {kmac_per_pixel:.3f}")
+        logger.info(f"Completed: {data} | time: {ds_time:.2f}s | GPU: {gpu_used_mb:.2f}MB | RAM: {ram_used_mb:.2f}MB | kMAC/pixel: {kmac_per_pixels_total:.3f}")
     
     total_time = time.time() - all_stats["total_start"]
     all_stats["total_time"] = total_time

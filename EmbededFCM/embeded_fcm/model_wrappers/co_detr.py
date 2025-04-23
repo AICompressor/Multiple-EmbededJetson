@@ -89,10 +89,16 @@ class CO_DINO_5scale_9encdoer_lsj_r50_3x_coco(BaseWrapper):
             
             data['img_metas'][0]['batch_input_shape'] = data['img'][0].size()[1:]
             
-            macs, pixels = self.profile_backbone(data['img'][0].unsqueeze(0))
-            kmacs_per_pixels = macs / 1_000 / pixels
+            macs, pixels, neck_results = self.profile_backbone(data['img'][0].unsqueeze(0))
+            kmacs_per_pixels_nn_part_1 = macs / 1_000 / pixels
             
+            # macs = self.profile_nn_part_2(neck_results, data['img_metas'], device)
+            # kmacs_per_pixels += macs / 1_000
+            # kmacs_per_pixels /= pixels
             
+        return {
+            "kmacs_per_pixels_nn_part_1": kmacs_per_pixels_nn_part_1
+        }
     
     def profile_backbone(self, x):
         with torch.no_grad():
@@ -123,10 +129,48 @@ class CO_DINO_5scale_9encdoer_lsj_r50_3x_coco(BaseWrapper):
             )
             macs_sum += macs
             
-        return macs_sum, pixels
+            neck_results = self.model.neck(backbone_results)
+            
+        return macs_sum, pixels, neck_results
     
-    def neck_input_constructors(self, input_res):
+    def profile_nn_part_2(self, features, metas, device):
+        head = self.model.query_head.to(device).eval()
+        wrapper = HeadProfilingWrappers(head, metas).to(device)
+        
+        with torch.no_grad():
+            shapes = ([tuple(f.shape) for f in features], wrapper)
+            
+            macs, params = get_model_complexity_info(
+                wrapper,
+                input_res=shapes,
+                input_constructor=self.head_input_constructor,
+                as_strings=False,
+                print_per_layer_stat=True,
+                verbose=True
+            )
+            
+        return macs
+    
+    def neck_input_constructors(self, res_shapes):
         device = next(self.model.neck.parameters()).device
         
-        feats = [torch.zeros(s, device=device) for s in input_res]
+        feats = [torch.zeros(s, device=device) for s in res_shapes]
         return {"inputs": feats}
+    
+    def head_input_constructor(self, res_shapes):
+        shape, wrapper = res_shapes
+        dev = next(wrapper.parameters()).device
+        dummy_feats = [torch.zeros(sz, device=dev) for sz in shape]
+        return {
+            "x": dummy_feats
+        }
+        
+class HeadProfilingWrappers(nn.Module):
+    def __init__(self, head, metas):
+        super().__init__()
+        self.head = head
+        self.metas = metas
+        
+    def forward(self, x):
+        return self.head.simple_test(x, self.metas, rescale=True, return_encoder_output=True)
+        
