@@ -3,7 +3,6 @@ import sys
 import cv2
 import numpy as np
 import time
-import threading
 import psutil
 import pynvml
 from ptflops import get_model_complexity_info
@@ -11,6 +10,8 @@ import os
 import json
 from tqdm import tqdm
 import logging
+import contextlib
+import io
 
 import torch
 import torch.nn as nn
@@ -77,7 +78,7 @@ def test(model, args, logger):
         "datasets": []
     }
     
-    for data in tqdm(dataset_list, desc="Datasets"):
+    for data in tqdm(dataset_list, desc="Datasets", leave=False):
         logger.info(f"Start processing: {data}")
         ds_start = time.time()
         
@@ -101,7 +102,9 @@ def test(model, args, logger):
         kmac_per_pixels_total = 0.0
         
         results = []
-        model_only_time = 0.0
+        model_all_time = 0.0
+        model_nn_part_1_time = 0.0
+        model_nn_part_2_time = 0.0
         for idx, batch in tqdm(enumerate(dataloader), desc=f"DATA: {data}"):
             data_start_time = time.time()
             imgs = batch[0]['img']
@@ -109,11 +112,15 @@ def test(model, args, logger):
                 result = model.unsplit(imgs, device)
             data_end_time = time.time() - data_start_time
             
-            model_only_time += data_end_time
+            model_all_time += data_end_time
+            model_nn_part_1_time += result["nn_part_1_time"]
+            model_nn_part_2_time += result["nn_part_2_time"]
             
-            kmac_per_pixels = model.profile_model(imgs, device)
-            kmac_per_pixels_total += kmac_per_pixels["kmacs_per_pixels_nn_part_1"]
-            results.append(result)
+            buf = io.StringIO()
+            with contextlib.redirect_stdout(buf):
+                kmac_per_pixels = model.profile_model(imgs, device)
+                kmac_per_pixels_total += kmac_per_pixels["kmacs_per_pixels_nn_part_1"]
+            results.append(result["results"])
             
         eval_results = dataset.evaluate(
             results,
@@ -131,7 +138,9 @@ def test(model, args, logger):
         stats = {
             "dataset": data,
             "time_sec": ds_time,
-            "model_only_time": model_only_time,
+            "model_all_time": model_all_time,
+            "model_part_1_time": model_nn_part_1_time,
+            "model_part_2_time": model_nn_part_2_time,
             "gpu_used_mb": gpu_used_mb,
             "kmac_per_pixels": kmac_per_pixels_total,
             "eval_bbox": eval_results

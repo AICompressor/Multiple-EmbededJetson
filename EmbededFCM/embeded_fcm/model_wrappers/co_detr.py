@@ -1,4 +1,5 @@
 import torch
+import time
 from ptflops import get_model_complexity_info
 
 from mmcv.ops import RoIPool
@@ -21,8 +22,19 @@ class CO_DINO_5scale_9encdoer_lsj_r50_3x_coco(BaseWrapper):
         self.cfg = self.model.cfg
     
     def unsplit(self, x, device):
+        nn_part_1_start_time = time.time()
         features, metas = self.input_to_features(x, device)
-        return self.features_to_output(features, metas, device)[0]
+        nn_part_1_time = time.time() - nn_part_1_start_time
+        
+        nn_part_2_start_time = time.time()
+        results = self.features_to_output(features, metas, device)[0]
+        nn_part_2_time = time.time() - nn_part_2_start_time
+        
+        return {
+            "nn_part_1_time": nn_part_1_time,
+            "nn_part_2_time": nn_part_2_time,
+            "results": results
+        }
     
     def input_to_features(self, x, device):
         self.model = self.model.to(device).eval()
@@ -102,8 +114,8 @@ class CO_DINO_5scale_9encdoer_lsj_r50_3x_coco(BaseWrapper):
     
     def profile_backbone(self, x):
         with torch.no_grad():
-            _, C, H, W = x.shape
-            pixels = C * H * W
+            B, C, H, W = x.shape
+            pixels = B * C * H * W
             macs_sum = 0.0
             
             macs, _ = get_model_complexity_info(
@@ -145,8 +157,8 @@ class CO_DINO_5scale_9encdoer_lsj_r50_3x_coco(BaseWrapper):
                 input_res=shapes,
                 input_constructor=self.head_input_constructor,
                 as_strings=False,
-                print_per_layer_stat=True,
-                verbose=True
+                print_per_layer_stat=False,
+                verbose=False
             )
             
         return macs
