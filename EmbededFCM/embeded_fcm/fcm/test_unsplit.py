@@ -9,7 +9,8 @@ import pynvml
 from ptflops import get_model_complexity_info
 import os
 import json
-import tqdm
+from tqdm import tqdm
+import logging
 
 import torch
 import torch.nn as nn
@@ -53,8 +54,17 @@ def parse_args(argv):
     args = parser.parse_args(argv)
     return args
 
-def test(model, args):
+def setup_logger():
+    logger = logging.getLogger("unsplit_inference")
+    logger.setLevel(logging.INFO)
+    ch = logging.StreamHandler(sys.stdout)
+    ch.setFormatter(logging.Formatter("[%(asctime)s] %(levelname)s: %(message)s"))
+    logger.addHandler(ch)
+    return logger
+
+def test(model, args, logger):
     device = args.device
+    os.makedirs(args.save_dir, exist_ok=True)
     
     pynvml.nvmlInit()
     handle = pynvml.nvmlDeviceGetHandleByIndex(0)
@@ -62,7 +72,15 @@ def test(model, args):
     model = model.to(device).eval()
     dataset_list = os.listdir(args.dataset)
     
-    for data in dataset_list:
+    all_stats = {
+        "total_start": time.time(),
+        "datasets": []
+    }
+    
+    for data in tqdm(dataset_list, desc="Datasets"):
+        logger.info(f"Start processing: {data}")
+        ds_start = time.time()
+        
         dataset = SFUHW(
             root=os.path.join(args.dataset, data),
             annotation_file=f"annotations/{data}.json"
@@ -80,29 +98,62 @@ def test(model, args):
             collate_fn=lambda x:x
         )
         
+        kmac_per_pixel = 0.0
+        
         results = []
-        for idx, batch in enumerate(dataloader):
+        model_only_time = 0.0
+        for idx, batch in tqdm(enumerate(dataloader)):
+            data_start_time = time.time()
             imgs = batch[0]['img']
             with torch.no_grad():
                 result = model.unsplit(imgs, device)
+            data_end_time = time.time() - data_start_time
+            
+            model_only_time += data_end_time
+            
+            model.profile_model(imgs, device)
             
             results.append(result)
-            # for det in result:
-            #     det_np = [d for d in det]
-            #     results.append(det_np)
                 
         eval_results = dataset.evaluate(
             results,
             metric='bbox'
         )
         
-        # save results on json file
+        ds_end = time.time()
+        ds_time = ds_end - ds_start
+        
+        mem_info = pynvml.nvmlDeviceGetMemoryInfo(handle)
+        gpu_used_mb = mem_info.used / 1024 ** 2
+        
+        ram_used_mb = psutil.virtual_memory().used / 1024 ** 2
+        
+        stats = {
+            "dataset": data,
+            "time_sec": ds_time,
+            "model_only_time": model_only_time,
+            "gpu_used_mb": gpu_used_mb,
+            "kmac_per_pixel": kmac_per_pixel,
+            "eval_bbox": eval_results
+        }
+        all_stats["datasets"].append(stats)
         
         # print results and complexity on terminal
+        logger.info(f"Completed: {data} | time: {ds_time:.2f}s | GPU: {gpu_used_mb:.2f}MB | RAM: {ram_used_mb:.2f}MB | kMAC/pixel: {kmac_per_pixel:.3f}")
+    
+    total_time = time.time() - all_stats["total_start"]
+    all_stats["total_time"] = total_time
+    
+    # save results on json file
+    out_file = os.path.join(args.save_dir, "inference_results.json")
+    with open(out_file, "w") as f:
+        json.dump(all_stats, f, indent=2)
 
 def main(argv):
     args = parse_args(argv)
     device = args.device
+    
+    logger = setup_logger()
     
     torch.cuda.empty_cache()
     torch.cuda.reset_peak_memory_stats()
@@ -115,13 +166,10 @@ def main(argv):
         model_checkpoint=model_checkpoint
     )
     
-    # set logger
-    
-    # print specs
-    
     test(
         model,
-        args
+        args,
+        logger
     )
 
 if __name__ == "__main__":

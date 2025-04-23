@@ -1,4 +1,5 @@
 import torch
+from ptflops import get_model_complexity_info
 
 from mmcv.ops import RoIPool
 from mmcv.parallel import collate, scatter
@@ -63,3 +64,68 @@ class CO_DINO_5scale_9encdoer_lsj_r50_3x_coco(BaseWrapper):
             
             data['img_metas'][0]['batch_input_shape'] = data['img'][0].size()[1:]
             return self.model.extract_feat(data['img'][0].unsqueeze(0)), data['img_metas']
+        
+    def profile_model(self, x, device):
+        with torch.no_grad():
+            self.cfg.data.test.pipeline[0].type = 'LoadImageFromWebcam'
+            
+            self.cfg.data.test.pipeline = replace_ImageToTensor(self.cfg.data.test.pipeline)
+            test_pipeline = Compose(self.cfg.data.test.pipeline)
+            
+            data = dict(img=x)
+            data = test_pipeline(data)
+            
+            data['img_metas'] = [img_metas.data for img_metas in data['img_metas']]
+            data['img'] = [img.data for img in data['img']]
+            
+            if next(self.model.parameters()).is_cuda:
+                # scatter to specified GPU
+                data = scatter(data, [device])[0]
+            else:
+                for m in self.model.modules():
+                    assert not isinstance(
+                        m, RoIPool
+                    ), 'CPU inference with RoIPool is not supported currently.'
+            
+            data['img_metas'][0]['batch_input_shape'] = data['img'][0].size()[1:]
+            
+            macs, params = self.profile_backbone(data['img'][0].unsqueeze(0))
+    
+    def profile_backbone(self, x):
+        with torch.no_grad():
+            _, C, H, W = x.shape
+            pixels = C * H * W
+            macs_sum = 0.0
+            
+            macs, _ = get_model_complexity_info(
+                self.model.backbone,
+                input_res=(C, H, W),
+                input_constructor=None,
+                as_strings=False,
+                print_per_layer_stat=False,
+                verbose=False
+            )
+            macs_sum += macs
+            
+            backbone_results = self.model.backbone(x)
+            input_res = [tuple(f.shape) for f in backbone_results]
+            
+            macs, _ = get_model_complexity_info(
+                self.model.neck,
+                input_res=input_res,
+                input_constructor=self.neck_input_constructors,
+                as_strings=False,
+                print_per_layer_stat=False,
+                verbose=False 
+            )
+            macs_sum += macs
+            
+        return macs_sum, pixels
+    
+    def neck_input_constructors(self, input_res):
+        device = next(self.model.neck.parameters()).device
+        dummy_inputs = tuple(torch.zeros(s, device=device) for s in input_res)
+        
+        print(input_res)
+        
+        return (dummy_inputs,)
