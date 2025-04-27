@@ -176,3 +176,5 @@ cython_debug/
 
 *.pth
 */models/*
+EmbededFCM/embeded_fcm/fcm/train_package/data/openImages/*
+EmbededFCM/embeded_fcm/fcm/train_package/openImages/*
